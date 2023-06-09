@@ -1,0 +1,181 @@
+version: "3"
+services:
+  # React Frontend
+  react-frontend:
+    image: stack/react-frontend
+    build: ./react-frontend
+    container_name: react-frontend
+    hostname: localhost
+    healthcheck:
+      test: ["CMD", "curl", "-f", "react-frontend:8080"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    ports:
+      - "8081:8080"
+    networks:
+      - stack
+  # Node Backend
+  node-backend:
+    image: stack/node-backend
+    build: ./node-backend
+    container_name: node-backend
+    hostname: localhost
+    depends_on:
+      - redis
+      - postgres
+    # TODO: healthcheck
+    ports:
+      - "3000:3000"
+    networks:
+      - stack
+  # Node Backend Microservice
+  node-backend-microservice:
+    image: stack/node-backend-microservice
+    build: ./node-backend-microservice
+    container_name: node-backend-microservice
+    hostname: localhost
+    networks:
+      - stack
+  # Redis DB Service
+  redis:
+    image: redis:alpine3.17
+    container_name: redis-db
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis:/data
+    networks:
+      - stack
+  # Postgres DB Service
+  postgres:
+    image: postgres:alpine3.17
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - stack
+  # PGAdmin
+  pgadmin:
+    image: dpage/pgadmin4:7
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: XXX@XXX.XX
+      PGADMIN_DEFAULT_PASSWORD: XXX
+    ports:
+      - "5050:80"
+    networks:
+      - stack
+
+  # Nginx Prometheus Exporter
+  nginx-prometheus-exporter:
+    container_name: nginx-prometheus-exporter
+    image: "nginx/nginx-prometheus-exporter:0.11"
+    depends_on:
+      react-frontend:
+        condition: service_healthy
+    command:
+      - -nginx.scrape-uri
+      - http://react-frontend:8080/stub_status
+    networks:
+      - stack
+  # Redis Exporter
+  redis-prometheus-exporter:
+    container_name: redis-prometheus-exporter
+    image: oliver006/redis_exporter:v1.50.0
+    command: -redis.addr redis://redis:6379
+    networks:
+      - stack
+  # Postgres Exporter
+  postgres-prometheus-exporter:
+    container_name: postgres-prometheus-exporter
+    image: bitnami/postgres-exporter:0.12.0
+    networks:
+      - stack
+
+  # Prometheus
+  prometheus:
+    # Run Container as root user
+    user: root
+    image: prom/prometheus:v2.43.0
+    container_name: prometheus
+    hostname: localhost
+    restart: always
+    ports:
+      - "9090:9090"
+    # Mount config file from local to Container
+    volumes:
+      - "./prometheus/config:/config"
+      # - "./prometheus/data/prometheus:/prometheus/data"
+    # Container start CMD to load config file
+    command:
+      - "--config.file=/config/prometheus.yml"
+      - "--web.enable-lifecycle"
+    networks:
+      - stack
+  # Alertmanager
+  alertmanager:
+    # Run Container as root user
+    user: root
+    image: prom/alertmanager:v0.25.0
+    container_name: alertmanager
+    hostname: localhost
+    restart: always
+    ports:
+      - "9093:9093"
+    # Mount config file from local to Container
+    volumes:
+      - "./prometheus/config:/config"
+      # - "./prometheus/data/alertmanager:/alertmanager/data"
+    # Container start CMD to load config file
+    command:
+      - "--config.file=/config/alertmanager.yml"
+    networks:
+      - stack
+
+  #Grafana
+  grafana:
+    # Run Container as root user
+    user: root
+    image: grafana/grafana:8.5.22
+    container_name: grafana
+    hostname: localhost
+    restart: always
+    ports:
+      - "3001:3000"
+    # Mount config file from local to Container
+    volumes:
+      - "./grafana/config/grafana.ini:/etc/grafana/grafana.ini"
+      - "./grafana/provisioning:/etc/grafana/provisioning"
+      # - "./grafana/data/grafana:/var/lib/grafana"
+    networks:
+      - stack
+
+  #Heimdall
+  heimdall:
+    image: stack/heimdall
+    build: ./heimdall
+    container_name: heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    # volumes:
+    #   - "./heimdall/config:/config"
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
+
+volumes:
+  redis:
+    driver: local
+  pgdata:
+    driver: local
+
+networks:
+  stack:
+    name: stack

@@ -1,0 +1,21 @@
+groups:
+  - name: ExporterDown
+    rules:
+      - alert: "Redis Prometheus Exporter Offline Alert"
+        expr: up{instance="redis-prometheus-exporter:9121", job="redis-prometheus-exporter"} == 0
+        for: 5s
+        annotations:
+          summary: "Redis Prometheus Exporter Offline : {{.instance}}"
+          description: "Redis Prometheus Exporter Offline  : {{.instance}}"
+      - alert: "Nginx Prometheus Exporter Offline Alert"
+        expr: up{instance="nginx-prometheus-exporter:9113", job="nginx-prometheus-exporter"} == 0
+        for: 5s
+        annotations:
+          summary: "Nginx Prometheus Exporter Offline : {{.instance}}"
+          description: "Nginx Prometheus Exporter Offline  : {{.instance}}"
+      - alert: "Postgres Prometheus Exporter Offline Alert"
+        expr: up{instance="postgres-prometheus-exporter:9187", job="postgres-prometheus-exporter"} == 0
+        for: 5s
+        annotations:
+          summary: "Postgres Prometheus Exporter Offline : {{.instance}}"
+          description: "Postgres Prometheus Exporter Offline  : {{.instance}}"
