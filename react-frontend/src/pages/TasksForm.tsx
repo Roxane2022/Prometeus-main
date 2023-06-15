@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react'
-import React, { useRef } from 'react';
-
+import React, { useRef } from 'react'
 import './TasksForm.css'
 import axios from 'axios'
 import { TaskItem } from '../components/TaskItem'
 import { ResetTasks } from '../components/ResetTask'
-import { DateTimePicker } from 'react-datetime-picker'
+
+import  SearchBox from '../components/SearchBox'
+import Maps from '../components/Maps'
+ 
 
 
 function Dashboard() {
 
-  const [tasks, setTasks] = useState<{ name: string, id: string, time: string }[]>([])
+  const [tasks, setTasks] = useState<{ name: string, id: string, time: Date }[]>([])
   const [input, setInput] = useState("")
   const [selectedDate, handleDateChange] = useState("")
-
+  const [selectTask, loadtask] = useState([]);
+  const [selectPosition, setSelectPosition] = useState(null)
+  const divref=useRef<HTMLDivElement>(null)
+  ;
   useEffect(() => {
     // TODO: validate data with zod
     axios.get('http://localhost:3000/tasks')
@@ -31,7 +36,8 @@ function Dashboard() {
     console.log('A name was submitted: ' + input)
 
     axios.post('http://localhost:3000/tasks', {
-      name: input
+      name: input,
+      time: selectedDate
     })
       .then(res => {
         // TODO: validate data with zod
@@ -52,10 +58,35 @@ function Dashboard() {
         console.log("Error while deleting task", err)
       })
   }
+// set the transition between the main Dashboard and the details vue
+  async function handleAddDetailsTask() {
+     const loadtask= await axios.get('http://localhost:3000/task/${id}' )
+    .then(res=>{
+   setTasks(res.data)})
+   return(
+  
+       <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100vw",
+        height: "100vh",
+      }}
+    >
+      <div style={{ width: "50vw", height: "100%" }}>
+        <Maps selectPosition={selectPosition} />
+      </div>
+      <div style={{ width: "50vw" }}>
+        <SearchBox selectPosition={selectPosition} setSelectPosition={setSelectPosition}/>
+      </div>
+      <div style={{ width: "50vw" }}>
+        <SearchBox selectPosition={selectTask} setSelectPosition={loadtask}/>
+      </div>
+    </div>
+  ) 
 
-  /* function handleDateChange(value: string): void {
-    throw new Error('Function not implemented.')
-  } */
+}
+
 
   return (
     <div className="App">
@@ -78,11 +109,31 @@ function Dashboard() {
 
       <ResetTasks />
 
+
+  
+<div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        width: "100vw",
+        height: "100vh",
+      }}
+    >
+      <div style={{ width: "50vw", height: "100%" }}>
+        <Maps selectPosition={selectPosition} />
+      </div>
+      <div style={{ width: "50vw" }}>
+        <SearchBox selectPosition={selectPosition} setSelectPosition={setSelectPosition}/>
+      </div>
+      <div style={{ width: "50vw" }}>
+        <SearchBox selectPosition={selectTask} setSelectPosition={loadtask}/>
+      </div>
+    </div>
+  
+
       {tasks.map((task, index) => {
         return (
-          <TaskItem key={index} task={task} handleDeleteTask={handleDeleteTask} handleAddDetailsTask={function (id: string): void {
-                throw new Error('Function not implemented.')
-            } } />
+          <TaskItem key={index} task={task}  handleDeleteTask={handleDeleteTask} handleAddDetailsTask={handleAddDetailsTask} />
         )
       })}
 

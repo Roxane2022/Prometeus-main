@@ -3,7 +3,7 @@ import './UserItem.css'
 import axios from 'axios'
 
 type TaskItemProps = {
-  task: { id: string, name: string, time: string},
+  task: { id: string, name: string, time: Date},
   handleDeleteTask: (id: string) => void, handleAddDetailsTask:(id: string) => void
 }
 
@@ -26,7 +26,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, handleDeleteTask, hand
   return (
     <div className='align-text-and-button'>
       <div >
-        <p>{task.name}</p>
+        <p>{task.name}</p><p>{task.time.toString()}</p>
       </div>
       <input type="button" value="Delete Task" onClick={() => handleDeleteTask(task.id)} />
       <div style={{ backgroundColor: rgbColor, width: 20, height: 20 }}></div>
