@@ -7,6 +7,7 @@ import { ResetTasks } from '../components/ResetTask'
 
 import  SearchBox from '../components/SearchBox'
 import Maps from '../components/Maps'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
  
 
 
@@ -59,12 +60,27 @@ function Dashboard() {
       })
   }
 // set the transition between the main Dashboard and the details vue
-  async function handleAddDetailsTask() {
+
+ /* async function handleAddDetailsTask(id:string) {
+console.log('Bist du da?${id}');
      const loadtask= await axios.get('http://localhost:3000/task/${id}' )
     .then(res=>{
    setTasks(res.data)})
    return(
   
+<MapContainer center={[51.505, -0.09]} zoom={13} scrollWheelZoom={false}>
+  <TileLayer
+    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  />
+  <Marker position={[51.505, -0.09]}>
+    <Popup>
+      A pretty CSS3 popup. <br /> Easily customizable.
+    </Popup>
+  </Marker>
+</MapContainer>
+
+  /*  
        <div
       style={{
         display: "flex",
@@ -76,16 +92,18 @@ function Dashboard() {
       <div style={{ width: "50vw", height: "100%" }}>
         <Maps selectPosition={selectPosition} />
       </div>
-      <div style={{ width: "50vw" }}>
+       <div style={{ width: "50vw" }}>
         <SearchBox selectPosition={selectPosition} setSelectPosition={setSelectPosition}/>
-      </div>
+      </div> 
       <div style={{ width: "50vw" }}>
         <SearchBox selectPosition={selectTask} setSelectPosition={loadtask}/>
       </div>
     </div>
+   
+    
   ) 
 
-}
+}*/
 
 
   return (
@@ -109,8 +127,17 @@ function Dashboard() {
 
       <ResetTasks />
 
+      {tasks.map((task, index) => {
+        function handleAddDetailsTask(id: string): void {
+          throw new Error('Function not implemented.')
+        }
 
-  
+        return (
+          <TaskItem key={index} task={task}  handleDeleteTask={handleDeleteTask} handleAddDetailsTask={handleAddDetailsTask} />
+        )
+      })}
+
+    
 <div
       style={{
         display: "flex",
@@ -125,18 +152,11 @@ function Dashboard() {
       <div style={{ width: "50vw" }}>
         <SearchBox selectPosition={selectPosition} setSelectPosition={setSelectPosition}/>
       </div>
-      <div style={{ width: "50vw" }}>
-        <SearchBox selectPosition={selectTask} setSelectPosition={loadtask}/>
-      </div>
+     
     </div>
-  
+    
 
-      {tasks.map((task, index) => {
-        return (
-          <TaskItem key={index} task={task}  handleDeleteTask={handleDeleteTask} handleAddDetailsTask={handleAddDetailsTask} />
-        )
-      })}
-
+      
     </div>
   )
 }

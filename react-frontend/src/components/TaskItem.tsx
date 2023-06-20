@@ -32,8 +32,6 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, handleDeleteTask, hand
       <div style={{ backgroundColor: rgbColor, width: 20, height: 20 }}></div>
     
 
-<input type="button" value="Details" onClick={() => handleAddDetailsTask(task.id)} />
-<div style={{ backgroundColor: rgbColor, width: 20, height: 20 }}></div>
 </div>
   )
 

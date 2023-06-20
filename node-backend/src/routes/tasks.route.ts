@@ -43,6 +43,24 @@ router.get('/',
    // addToCache('tasks', JSON.stringify(data))
     res.send(data)
   })
+/* 
+  router.get('/id',
+  // we try to look up the users in the cache using the middleware
+   (req: Request, res: Response, next: NextFunction) => {
+    getFromCache('tasks', res, next)
+  }, 
+  // if the lookup was unsuccessful, we query the database
+  
+  async (req: Request, res: Response) => {
+    console.log ("route getid");
+    const queryResult = await pgClient.query('SELECT * FROM tasks where id=""')
+    const data = queryResult.rows
+    console.log('Cache miss, adding to cache', data)
+   // addToCache('tasks', JSON.stringify(data))
+    res.send(data)
+  })
+*/
+
 
 /***
  * @swagger

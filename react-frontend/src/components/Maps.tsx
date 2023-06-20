@@ -41,7 +41,7 @@ export default function Maps(props: { selectPosition: any; }) {
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key={1xj8wNzR9WMVcM7rnvSx}"
+        url="https://api.maptiler.com/maps/basic/256/{z}/{x}/{y}.png?key=1xj8wNzR9WMVcM7rnvSx"
       />
       {selectPosition && (
         <Marker position={[51.505, -0.09]}
