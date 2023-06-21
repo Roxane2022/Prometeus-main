@@ -1,10 +1,10 @@
-# Beispielprojekt für den Kurs
+# Abschlussprojekt: Routine-App
 
-Das Projekt soll viele Inhalte, die im Kur sunterrichtet wurden zusammenfassen und in einem Beispielprojekt darstellen. Das Projekt soll auch als Vorlage für die Abschlussprojekte dienen.
+
 
 # Inhaltsverzeichnis (TOC)
 
-- [Beispielprojekt für den Kurs](#beispielprojekt-für-den-kurs)
+- [Abschlussprojekt](#abschlussprojekt)
 - [Inhaltsverzeichnis (TOC)](#inhaltsverzeichnis-toc)
 - [Überblick über das Projekt](#überblick-über-das-projekt)
   - [(Primäre) Interaktionsmöglichkeit für den Benutzer](#primäre-interaktionsmöglichkeit-für-den-benutzer)
@@ -16,18 +16,11 @@ Das Projekt soll viele Inhalte, die im Kur sunterrichtet wurden zusammenfassen u
   - [Vorbereitung](#vorbereitung)
   - [Starten](#starten)
 - [Weiterführende Informationen](#weiterführende-informationen)
-- [Fehlende Inhalte](#fehlende-inhalte)
+
 
 # Überblick über das Projekt
 
 <image src='images/readme/Systemdiagramm.png' width="100%" style="background-color:#ffffff80;border-radius:5%">
-
-Das Projekt besteht aus vier Teilen:
-
-1. Blau - (Primäre) Interaktionsmöglichkeit für den Benutzer
-2. Grün - Backend zur Verarbeitung der Benutzereingaben
-3. Rot - Exporter zur Bereitstellung von Metriken
-4. Orange - Monitoring und Alerting
 
 ## (Primäre) Interaktionsmöglichkeit für den Benutzer
 
@@ -52,7 +45,7 @@ Die Metriken werden von Prometheus gesammelt und in Grafana visualisiert. Alertm
 | --------------------- | ------------------------------ | -------------------------------------------------------------- |
 | Heimdall              | http://localhost               | <image src='images/readme/Heimdall.svg' style="width:20px;">   |
 | Grafana               | http://localhost:3001          | <image src='images/readme/Grafana.png' style="width:20px;">    |
-| React App             | http://localhost:8080          | <image src='images/readme/React.png' style="width:20px;">      |
+| React App             | http://localhost:8080/dashboard| <image src='images/readme/React.png' style="width:20px;">      |
 | pgAdmin 4             | http://localhost:5050          | <image src='images/readme/Postgres.png' style="width:20px;">   |
 | Node.js App           | http://localhost:3000          | <image src='images/readme/NodeJS.png' style="width:20px;">     |
 | Node.js App - Swagger | http://localhost:3000/api-docs | <image src='images/readme/NodeJS.png' style="width:20px;">     |
@@ -73,6 +66,7 @@ In der Docker-Compose Datei muss im pgadmin Service die Variable `PGADMIN_DEFAUL
 ## Starten
 
 Das Projekt wird mit folgenden Befehlen gestartet: `docker compose up -d`
+mIt dem Befehl "npm run dev" kann man Paralell im Terminal und auf dem Browser interagieren
 
 # Weiterführende Informationen
 
@@ -86,10 +80,8 @@ Gemountete Volumes sind hilfreich für die Entwicklung. Sie können in der Docke
 
 # Fehlende Inhalte
 
-Folgende Inhalte wurden im Unterricht behandelt, sind aber nicht im Projekt enthalten:
+Die folgenden Vorlagen wurden bereit gestellt, wurden aber nicht für das Routine-App Projekt gebraucht:
 
-- CI/CD Pipelines
-  - Jenkins
-  - GitHub CI
-- Terraform
-- Ansible
+-Grafana
+- prometheus
+
