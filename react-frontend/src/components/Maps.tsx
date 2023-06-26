@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L from "leaflet";
+import L, { map, popup } from "leaflet";
+import placeholder from "./placeholder.png";
 
-const icon = L.icon({
-  iconUrl: "./placeholder.png",
+  var icon = L.icon({
+  iconUrl:placeholder,
   iconSize: [38, 38],
-});
+});  
+ 
+
+
 
 const position = [51.505, -0.09];
 
@@ -51,6 +55,9 @@ export default function Maps(props: { selectPosition: any; }) {
           </Popup>
         </Marker>
       )}
+      
+
+
       <ResetCenterView selectPosition={selectPosition} />
     </MapContainer>
   );
